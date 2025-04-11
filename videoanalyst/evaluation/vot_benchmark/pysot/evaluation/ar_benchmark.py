@@ -21,6 +21,7 @@ class AccuracyRobustnessBenchmark:
         dataset:
         burnin:
     """
+
     def __init__(self, dataset, burnin=10):
         self.dataset = dataset
         self.burnin = burnin

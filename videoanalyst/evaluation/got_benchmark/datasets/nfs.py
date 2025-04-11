@@ -19,6 +19,7 @@ class NfS(object):
         fps (integer): Sequence frame rate. Two options ``30`` and ``240``
             are available. Default is 240.
     """
+
     def __init__(self, root_dir, fps=240):
         super(NfS, self).__init__()
         assert fps in [30, 240]

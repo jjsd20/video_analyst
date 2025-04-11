@@ -24,6 +24,7 @@ class ExperimentTrackingNet(ExperimentOTB):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
+
     def __init__(self,
                  root_dir,
                  subset='test',

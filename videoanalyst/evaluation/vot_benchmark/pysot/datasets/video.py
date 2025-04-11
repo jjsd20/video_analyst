@@ -13,6 +13,7 @@ import cv2
 
 
 class Video(object):
+
     def __init__(self, name, root, video_dir, init_rect, img_names, gt_rect,
                  attr):
         self.name = name

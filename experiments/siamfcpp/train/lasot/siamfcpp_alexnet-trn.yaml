@@ -43,17 +43,18 @@ test:
         exp_name: *TEST_NAME
         exp_save: *TEST_SAVE
         subsets: ["test"]  # (train_test|test)
-        device_num: 2
+        device_num: 1
 train:
   track:
     exp_name: &TRAIN_NAME "siamfcpp_alexnet-lasot"
     exp_save: &TRAIN_SAVE "snapshots"
-    num_processes: 2
+    num_processes: 1
     model:
       backbone:
         name: "AlexNet"
         AlexNet:
-          pretrain_model_path: "models/alexnet/alexnet-nopad-bn-md5_fa7cdefb48f41978cf35e8c4f1159cdc.pkl"
+          #pretrain_model_path: "models/alexnet/alexnet-nopad-bn-md5_fa7cdefb48f41978cf35e8c4f1159cdc.pkl"
+          pretrain_model_path: "models/alexnet/alexnet-bn-md5_fa7cdefb48f41978cf35e8c4f1159cdc.pkl"
       losses:
         names: ["SigmoidCrossEntropyRetina",
                 "SigmoidCrossEntropyCenterness",

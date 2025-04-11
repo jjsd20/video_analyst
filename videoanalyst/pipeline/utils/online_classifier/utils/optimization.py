@@ -7,6 +7,7 @@ from .tensorlist import TensorList
 
 class L2Problem:
     """Base class for representing an L2 optimization problem."""
+
     def __call__(self, x: TensorList) -> TensorList:
         """Shall compute the residuals of the problem."""
         raise NotImplementedError
@@ -30,6 +31,7 @@ class L2Problem:
 
 class MinimizationProblem:
     """General minimization problem."""
+
     def __call__(self, x: TensorList) -> TensorList:
         """Shall compute the loss."""
         raise NotImplementedError
@@ -47,6 +49,7 @@ class MinimizationProblem:
 
 class ConjugateGradientBase:
     """Conjugate Gradient optimizer base class. Implements the CG loop."""
+
     def __init__(self,
                  fletcher_reeves=True,
                  standard_alpha=True,
@@ -199,6 +202,7 @@ class ConjugateGradientBase:
 
 class ConjugateGradient(ConjugateGradientBase):
     """Conjugate Gradient optimizer, performing single linearization of the residuals in the start."""
+
     def __init__(self,
                  problem: L2Problem,
                  variable: TensorList,
@@ -304,6 +308,7 @@ class ConjugateGradient(ConjugateGradientBase):
 
 class GaussNewtonCG(ConjugateGradientBase):
     """Gauss-Newton with Conjugate Gradient optimizer."""
+
     def __init__(self,
                  problem: L2Problem,
                  variable: TensorList,
@@ -458,6 +463,7 @@ class GaussNewtonCG(ConjugateGradientBase):
 
 class GradientDescentL2:
     """Gradient descent with momentum for L2 problems."""
+
     def __init__(self,
                  problem: L2Problem,
                  variable: TensorList,
@@ -544,6 +550,7 @@ class GradientDescentL2:
 
 class NewtonCG(ConjugateGradientBase):
     """Newton with Conjugate Gradient. Handels general minimization problems."""
+
     def __init__(self,
                  problem: MinimizationProblem,
                  variable: TensorList,
@@ -682,6 +689,7 @@ class NewtonCG(ConjugateGradientBase):
 
 class GradientDescent:
     """Gradient descent for general minimization problems."""
+
     def __init__(self,
                  problem: MinimizationProblem,
                  variable: TensorList,

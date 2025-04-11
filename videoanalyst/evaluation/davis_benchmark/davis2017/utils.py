@@ -12,6 +12,7 @@ def _pascal_color_map(N=256, normalized=False):
     Official Matlab version can be found in the PASCAL VOC devkit
     http://host.robots.ox.ac.uk/pascal/VOC/voc2012/index.html#devkit
     """
+
     def bitget(byteval, idx):
         return (byteval & (1 << idx)) != 0
 
@@ -116,6 +117,7 @@ def generate_random_permutation_gt_obj_proposals(davis_root, subset, save_path):
 
 
 def color_map(N=256, normalized=False):
+
     def bitget(byteval, idx):
         return ((byteval & (1 << idx)) != 0)
 

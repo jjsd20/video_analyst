@@ -5,6 +5,7 @@ import torch
 
 class TensorList(list):
     """Container mainly used for lists of torch tensors. Extends lists with pytorch functionality."""
+
     def __init__(self, list_of_tensors=list()):
         super(TensorList, self).__init__(list_of_tensors)
 
@@ -178,6 +179,7 @@ class TensorList(list):
 
 
 def tensor_operation(op):
+
     def islist(a):
         return isinstance(a, TensorList)
 

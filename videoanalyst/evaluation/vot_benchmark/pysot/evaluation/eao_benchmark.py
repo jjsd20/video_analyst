@@ -17,6 +17,7 @@ class EAOBenchmark:
     Args:
         dataset:
     """
+
     def __init__(self, dataset, skipping=5, tags=['all']):
         self.dataset = dataset
         self.skipping = skipping

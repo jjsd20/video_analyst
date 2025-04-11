@@ -25,19 +25,22 @@ cv2.setNumThreads(1)
 # https://pytorch.org/docs/stable/notes/randomness.html#cudnn
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
+#export PYTHONPATH="/home/xyz/Code/videoanalyst:$PYTHONPATH"
+#python3 ./main/train.py --config 'experiments/siamfcpp/train/lasot/siamfcpp_alexnet-trn.yaml'
 
 
 def make_parser():
     parser = argparse.ArgumentParser(description='Test')
-    parser.add_argument('-cfg',
-                        '--config',
-                        default='',
-                        type=str,
-                        help='path to experiment configuration')
+    parser.add_argument(
+        '-cfg',
+        '--config',
+        default='experiments/siamfcpp/train/lasot/siamfcpp_alexnet-trn.yaml',
+        type=str,
+        help='path to experiment configuration')
     parser.add_argument(
         '-r',
         '--resume',
-        default="",
+        default="latest",
         help=r"completed epoch's number, latest or one model path")
 
     return parser

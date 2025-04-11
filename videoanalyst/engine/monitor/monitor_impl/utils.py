@@ -71,6 +71,7 @@ def mask_colorize(mask, num_classes, color_map):
 
 
 class AverageMeter(object):
+
     def __init__(self, max_num):
         self.queue_data = Queue(max_num)
 

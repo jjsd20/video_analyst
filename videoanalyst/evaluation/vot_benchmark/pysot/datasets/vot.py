@@ -26,6 +26,7 @@ class VOTVideo(Video):
         size_change: size change
         occlusion: occlusion
     """
+
     def __init__(self, name, root, video_dir, init_rect, img_names, gt_rect,
                  camera_motion, illum_change, motion_change, size_change,
                  occlusion, width, height):
@@ -93,6 +94,7 @@ class VOTDataset(Dataset):
         dataset_root: dataset root
         load_img: wether to load all imgs
     """
+
     def __init__(self, name, dataset_root):
         super(VOTDataset, self).__init__(name, dataset_root)
         try:
@@ -134,6 +136,7 @@ class VOTLTVideo(Video):
         img_names: image names
         gt_rect: groundtruth rectangle
     """
+
     def __init__(self,
                  name,
                  root,
@@ -196,6 +199,7 @@ class VOTLTDataset(Dataset):
         dataset_root: dataset root
         load_img: wether to load all imgs
     """
+
     def __init__(self, name, dataset_root, load_img=False):
         super(VOTLTDataset, self).__init__(name, dataset_root)
         try:

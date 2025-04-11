@@ -19,6 +19,7 @@ class TColor128(object):
         root_dir (string): Root directory of dataset where sequence
             folders exist.
     """
+
     def __init__(self, root_dir, download=True):
         super(TColor128, self).__init__()
         self.root_dir = root_dir

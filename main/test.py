@@ -13,14 +13,17 @@ from videoanalyst.engine.builder import build as tester_builder
 from videoanalyst.model import builder as model_builder
 from videoanalyst.pipeline import builder as pipeline_builder
 
+#experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot.yaml
+
 
 def make_parser():
     parser = argparse.ArgumentParser(description='Test')
-    parser.add_argument('-cfg',
-                        '--config',
-                        default='',
-                        type=str,
-                        help='experiment configuration')
+    parser.add_argument(
+        '-cfg',
+        '--config',
+        default='experiments/siamfcpp/test/vot/siamfcpp_alexnet.yaml',
+        type=str,
+        help='experiment configuration')
 
     return parser
 

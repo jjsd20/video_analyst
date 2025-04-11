@@ -69,6 +69,7 @@ class FilterBase:
         r"""
         an interface for update params
         """
+
     def __call__(self, data: Dict) -> bool:
         r"""
         An interface to filter data

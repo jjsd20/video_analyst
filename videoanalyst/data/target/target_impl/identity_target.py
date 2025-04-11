@@ -9,6 +9,7 @@ class IdentityTarget(TargetBase):
     Identity target
     just pass through the data without any modification
     """
+
     def __init__(self):
         super().__init__()
 

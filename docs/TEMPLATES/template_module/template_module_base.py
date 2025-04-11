@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-from abc import ABCMeta, abstractmethod
-from typing import List, Dict
-
-import cv2 as cv
-import numpy as np
-
-from yacs.config import CfgNode
+from abc import ABCMeta
 
 from videoanalyst.utils import Registry
 

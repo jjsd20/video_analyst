@@ -80,6 +80,7 @@ class SamplerBase:
         r"""
         an interface for update params
         """
+
     def __getitem__(self, item) -> Dict:
         r"""
         An interface to sample data

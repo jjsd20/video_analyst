@@ -11,6 +11,7 @@ from torch import nn
 
 class FreezeStateMonitor:
     """ Monitor the freezing state continuously and print """
+
     def __init__(self, module: nn.Module, verbose=True):
         """
         :param module: module to be monitored

@@ -14,6 +14,7 @@ class VideoWriter(object):
         write:
         release:
     """
+
     def __init__(self, video_file, fps=25, scale=1.0):
         """
 

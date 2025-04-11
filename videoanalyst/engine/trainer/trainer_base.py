@@ -89,6 +89,7 @@ class TrainerBase:
         r"""
         an interface to train for one epoch
         """
+
     def set_dataloader(self, dataloader: DataLoader):
         r""""""
         self._dataloader = dataloader

@@ -16,6 +16,7 @@ class ExperimentTColor128(ExperimentOTB):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
+
     def __init__(self, root_dir, result_dir='results', report_dir='reports'):
         self.dataset = TColor128(root_dir)
         self.result_dir = os.path.join(result_dir, 'TColor128')

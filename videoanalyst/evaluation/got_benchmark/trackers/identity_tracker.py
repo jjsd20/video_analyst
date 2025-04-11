@@ -4,6 +4,7 @@ from . import Tracker
 
 
 class IdentityTracker(Tracker):
+
     def __init__(self):
         super(IdentityTracker, self).__init__(name='IdentityTracker',
                                               is_deterministic=True)

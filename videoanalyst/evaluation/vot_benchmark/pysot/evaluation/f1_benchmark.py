@@ -5,6 +5,7 @@ from ..utils import calculate_accuracy, calculate_f1, determine_thresholds
 
 
 class F1Benchmark:
+
     def __init__(self, dataset):
         """
         Args:
@@ -67,7 +68,9 @@ class F1Benchmark:
                     calculate_f1(overlaps, score, (video.width,video.height),thresholds, N)
         return precision, recall, f1
 
-    def show_result(self, result, show_video_level=False,
+    def show_result(self,
+                    result,
+                    show_video_level=False,
                     helight_threshold=0.5):
         """pretty print result
         Args:

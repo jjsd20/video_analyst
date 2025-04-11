@@ -7,6 +7,7 @@
 # Revised for SiamMask by foolwood
 # --------------------------------------------------------
 class Dataset(object):
+
     def __init__(self, name, dataset_root):
         self.name = name
         self.dataset_root = dataset_root

@@ -6,6 +6,7 @@ from .utils import TensorList, operation, optimization
 
 
 class FactorizedConvProblem(optimization.L2Problem):
+
     def __init__(self, training_samples: TensorList, y: TensorList,
                  use_attention: bool, filter_reg: torch.Tensor, projection_reg,
                  sample_weights: TensorList, projection_activation,
@@ -137,6 +138,7 @@ class FactorizedConvProblem(optimization.L2Problem):
 
 
 class ConvProblem(optimization.L2Problem):
+
     def __init__(self, training_samples: TensorList, y: TensorList,
                  filter_reg: torch.Tensor, sample_weights: TensorList,
                  response_activation):

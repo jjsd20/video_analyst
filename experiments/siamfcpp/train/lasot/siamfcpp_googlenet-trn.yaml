@@ -45,12 +45,12 @@ test:
         exp_name: *TEST_NAME
         exp_save: *TEST_SAVE
         subsets: ["test"]  # (train_test|test)
-        device_num: 4
+        device_num: 1
 train:
   track:
-    exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot"
+    exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot-3"
     exp_save: &TRAIN_SAVE "snapshots"
-    num_processes: 4
+    num_processes: 1
     model:
       backbone:
         name: "Inception3"
@@ -90,9 +90,9 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 128  # 256
-      num_workers: 32
-      nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
+      minibatch: &MINIBATCH 48  # 256，raw-128
+      num_workers: 64
+      nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000 
       pin_memory: false
       datapipeline:
         name: "RegularDatapipeline"
@@ -165,13 +165,13 @@ train:
             {
             "name": "LinearLR",
             "start_lr": 0.000001,
-            "end_lr": 0.08,
+            "end_lr": 0.02, 
             "max_epoch": 1
             }
           - >
             {
             "name": "CosineLR",
-            "start_lr": 0.08,
+            "start_lr": 0.02, 
             "end_lr": 0.000001,
             "max_epoch": 19
             }

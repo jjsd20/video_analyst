@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
-from typing import Dict, List, Tuple
-from loguru import logger
-import numpy as np
-import cv2
 
-from yacs.config import CfgNode
-
-from ..contrib_module_base import TRACK_CONTRIB_MODULES, VOS_CONTRIB_MODULES, ContribModuleBase
+from ..contrib_module_base import (TRACK_CONTRIB_MODULES, VOS_CONTRIB_MODULES,
+                                   ContribModuleBase)
 
 
 @TRACK_CONTRIB_MODULES.register

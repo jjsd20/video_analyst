@@ -24,7 +24,8 @@ def hann2d(sz: torch.Tensor, centered=True) -> torch.Tensor:
         sz[1].item(), centered).reshape(1, 1, 1, -1)
 
 
-def hann2d_clipped(sz: torch.Tensor, effective_sz: torch.Tensor,
+def hann2d_clipped(sz: torch.Tensor,
+                   effective_sz: torch.Tensor,
                    centered=True) -> torch.Tensor:
     """1D clipped cosine window."""
 
@@ -46,8 +47,9 @@ def hann2d_clipped(sz: torch.Tensor, effective_sz: torch.Tensor,
         mid = (sz / 2).int()
         window_shift_lr = torch.cat(
             (window[:, :, :, mid[1]:], window[:, :, :, :mid[1]]), 3)
-        return torch.cat((window_shift_lr[:, :, mid[0]:, :],
-                          window_shift_lr[:, :, :mid[0], :]), 2)
+        return torch.cat(
+            (window_shift_lr[:, :,
+                             mid[0]:, :], window_shift_lr[:, :, :mid[0], :]), 2)
 
 
 def gauss_fourier(sz: int, sigma: float, half: bool = False) -> torch.Tensor:
@@ -174,8 +176,9 @@ def get_reg_filter(sz: torch.Tensor, target_sz: torch.Tensor, params):
     reg_window_sparse = torch.irfft(reg_window_dft,
                                     2,
                                     signal_sizes=sz.long().tolist())
-    reg_window_dft[0, 0, 0, 0, 0] += params.reg_window_min - sz.prod(
-    ) * reg_window_sparse.min()
+    reg_window_dft[
+        0, 0, 0, 0,
+        0] += params.reg_window_min - sz.prod() * reg_window_sparse.min()
     reg_window_dft = real(rfftshift2(reg_window_dft))
 
     # Remove zeros
@@ -197,9 +200,9 @@ def max2d(a: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
 
     max_val_row, argmax_row = torch.max(a, dim=-2)
     max_val, argmax_col = torch.max(max_val_row, dim=-1)
-    argmax_row = argmax_row.view(
-        argmax_col.numel(), -1)[torch.arange(argmax_col.numel(
-        )), argmax_col.view(-1)]
+    argmax_row = argmax_row.view(argmax_col.numel(),
+                                 -1)[torch.arange(argmax_col.numel()),
+                                     argmax_col.view(-1)]
     argmax_row = argmax_row.reshape(argmax_col.shape)
     argmax = torch.cat((argmax_row.unsqueeze(-1), argmax_col.unsqueeze(-1)), -1)
     return max_val, argmax

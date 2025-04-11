@@ -29,6 +29,7 @@ class Registry(dict):
     Access of module is just like using a dictionary, eg:
         f = some_registry["foo_module"]
     """
+
     def __init__(self, *args, **kwargs):
         self.name = 'Registry'
         if len(args) > 0 and isinstance(args[0], str):
@@ -70,6 +71,7 @@ class Timer():
     r"""
     Mesure & print elapsed time witin environment
     """
+
     def __init__(self,
                  name: str = "",
                  output_dict: Dict = None,

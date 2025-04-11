@@ -11,6 +11,7 @@ from videoanalyst.pipeline.pipeline_base import PipelineBase
 
 
 class PipelineTracker(object):
+
     def __init__(self,
                  name: str,
                  pipeline: PipelineBase,

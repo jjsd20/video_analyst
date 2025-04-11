@@ -10,6 +10,7 @@ from ..transformer_base import (TRACK_TRANSFORMERS, VOS_TRANSFORMERS,
 
 
 class RandomBlur(object):
+
     def __init__(self, ratio=0.25):
         self.ratio = ratio
 

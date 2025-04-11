@@ -56,14 +56,17 @@ class DatasetBase:
         r"""
         an interface for update params
         """
+
     def __getitem__(self, item: int) -> Dict:
         r"""
         An interface to get data item (Index-based Dataset).
         """
+
     def __next__(self) -> Dict:
         r"""
         An interface to get data item (Sampler-based Dataset).
         """
+
     def __len__(self):
         r"""
         Length of dataset

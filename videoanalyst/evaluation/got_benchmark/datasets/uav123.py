@@ -20,6 +20,7 @@ class UAV123(object):
         version (integer or string): Specify the benchmark version, specify as one of
             ``UAV123`` and ``UAV20L``.
     """
+
     def __init__(self, root_dir, version='UAV123'):
         super(UAV123, self).__init__()
         assert version.upper() in ['UAV20L', 'UAV123']

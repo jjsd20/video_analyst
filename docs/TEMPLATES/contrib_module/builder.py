@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from typing import Dict, List
+from typing import Dict
 
 from yacs.config import CfgNode
 
-from .contrib_module_base import TASK_CONTRIB_MODULES, ContribModuleBase
 from videoanalyst.utils import merge_cfg_into_hps
+
+from .contrib_module_base import TASK_CONTRIB_MODULES
 
 
 def build(task: str, cfg: CfgNode) -> ContribModule:

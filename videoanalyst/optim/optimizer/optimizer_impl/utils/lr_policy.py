@@ -85,6 +85,7 @@ class BaseLR():
 
 
 class ListLR(BaseLR):
+
     def __init__(self, *args):
         self.LRs = [LR for LR in args]
 
@@ -118,6 +119,7 @@ class ListLR(BaseLR):
 class MultiStageLR(BaseLR):
     """ Multi-stage learning rate scheduler
     """
+
     def __init__(self, lr_stages, **kwargs):
         """
         :param lr_stages: list, [(milestone1, lr1), (milestone2, lr2), ...]
@@ -160,6 +162,7 @@ class TransitionLR(BaseLR):
     To create new lr scheduling curve:
         please override pre_func, trans_func, and post_func
     """
+
     def __init__(self, start_lr=0, end_lr=0, max_epoch=1, max_iter=1, **kwargs):
         self._start_lr = start_lr
         self._end_lr = end_lr
@@ -192,6 +195,7 @@ class TransitionLR(BaseLR):
 
 @LR_POLICIES.register
 class LinearLR(TransitionLR):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pre_func = _IDENTITY
@@ -201,6 +205,7 @@ class LinearLR(TransitionLR):
 
 @LR_POLICIES.register
 class ExponentialLR(TransitionLR):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pre_func = math.log
@@ -210,6 +215,7 @@ class ExponentialLR(TransitionLR):
 
 @LR_POLICIES.register
 class CosineLR(TransitionLR):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pre_func = _IDENTITY

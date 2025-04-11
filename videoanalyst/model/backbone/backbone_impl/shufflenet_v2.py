@@ -117,6 +117,7 @@ def channel_shuffle(x, groups):
 
 
 class InvertedResidual(nn.Module):
+
     def __init__(self, inp, oup, stride, false_stride=False):
         super(InvertedResidual, self).__init__()
 
@@ -199,6 +200,7 @@ class InvertedResidual(nn.Module):
 
 
 class ShuffleNetV2(nn.Module):
+
     def __init__(self,
                  stages_repeats,
                  stages_out_channels,

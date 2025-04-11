@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 
 class conv_bn_relu(nn.Module):
+
     def __init__(self,
                  in_channel,
                  out_channel,
@@ -98,6 +99,7 @@ class upsample_block(nn.Module):
     r"""
     Upsample block. e.g. used for upsample and feature fusion in decoder
     """
+
     def __init__(self, h_channel, l_channel, out_channel):
         r"""
         h_channel:
@@ -144,6 +146,7 @@ class projector(nn.Module):
     r"""
     Projection layer to adjust channel number
     """
+
     def __init__(self, in_channel, out_channel):
         super(projector, self).__init__()
         self.conv1 = conv_bn_relu(in_channel,

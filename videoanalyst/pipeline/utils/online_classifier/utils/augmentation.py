@@ -11,6 +11,7 @@ from .preprocessing import numpy_to_torch, torch_to_numpy
 
 class Transform:
     """Base data augmentation transform class."""
+
     def __init__(self, output_sz=None, shift=None):
         self.output_sz = output_sz
         self.shift = (0, 0) if shift is None else shift
@@ -41,12 +42,14 @@ class Transform:
 
 class Identity(Transform):
     """Identity transformation."""
+
     def __call__(self, image):
         return self.crop_to_output(image)
 
 
 class FlipHorizontal(Transform):
     """Flip along horizontal axis."""
+
     def __call__(self, image):
         if isinstance(image, torch.Tensor):
             return self.crop_to_output(image.flip((3, )))
@@ -56,6 +59,7 @@ class FlipHorizontal(Transform):
 
 class FlipVertical(Transform):
     """Flip along vertical axis."""
+
     def __call__(self, image: torch.Tensor):
         if isinstance(image, torch.Tensor):
             return self.crop_to_output(image.flip((2, )))
@@ -65,6 +69,7 @@ class FlipVertical(Transform):
 
 class Translation(Transform):
     """Translate."""
+
     def __init__(self, translation, output_sz=None, shift=None):
         super().__init__(output_sz, shift)
         self.shift = (self.shift[0] + translation[0],
@@ -79,6 +84,7 @@ class Translation(Transform):
 
 class Scale(Transform):
     """Scale."""
+
     def __init__(self, scale_factor, output_sz=None, shift=None):
         super().__init__(output_sz, shift)
         self.scale_factor = scale_factor
@@ -106,6 +112,7 @@ class Scale(Transform):
 
 class Affine(Transform):
     """Affine transformation."""
+
     def __init__(self, transform_matrix, output_sz=None, shift=None):
         super().__init__(output_sz, shift)
         self.transform_matrix = transform_matrix
@@ -123,6 +130,7 @@ class Affine(Transform):
 
 class Rotate(Transform):
     """Rotate with given angle."""
+
     def __init__(self, angle, output_sz=None, shift=None):
         super().__init__(output_sz, shift)
         self.angle = math.pi * angle / 180
@@ -146,6 +154,7 @@ class Rotate(Transform):
 
 class Blur(Transform):
     """Blur with given sigma (can be axis dependent)."""
+
     def __init__(self, sigma, output_sz=None, shift=None):
         super().__init__(output_sz, shift)
         if isinstance(sigma, (float, int)):

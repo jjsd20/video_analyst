@@ -10,6 +10,7 @@ class OPEBenchmark:
         result_path: result path of your tracker
                 should the same format like VOT
     """
+
     def __init__(self, dataset):
         self.dataset = dataset
 

@@ -43,10 +43,10 @@ def build(task: str, cfg: CfgNode, basemodel=None):
     else:
         module = modules[name]()
 
-    hps = module.get_hps()
-    hps = merge_cfg_into_hps(cfg[name], hps)
-    module.set_hps(hps)
-    module.update_params()
+    hps = module.get_hps()  #获取超参数pretrain
+    hps = merge_cfg_into_hps(cfg[name], hps)  #合并超参数
+    module.set_hps(hps)  #设置超参数
+    module.update_params()  #更新参数
     return module
 
 

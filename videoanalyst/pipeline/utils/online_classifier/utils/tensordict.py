@@ -5,6 +5,7 @@ import torch
 
 class TensorDict(OrderedDict):
     """Container mainly used for dicts of torch tensors. Extends OrderedDict with pytorch functionality."""
+
     def concat(self, other):
         """Concatenates two dicts without copying internal data."""
         return TensorDict(self, **other)

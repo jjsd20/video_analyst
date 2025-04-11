@@ -9,6 +9,7 @@ from videoanalyst.model.module_base import ModuleBase
 
 
 class creat_residual_block(nn.Module):
+
     def __init__(self, inplanes, outplanes, stride, has_proj=False):
         super(creat_residual_block, self).__init__()
         self.has_proj = has_proj
@@ -58,6 +59,7 @@ class create_bottleneck(nn.Module):
     Modified Bottleneck : We change the kernel size of projection conv from 1 to 3.
 
     """
+
     def __init__(self, inplanes, outplanes, stride, has_proj=False):
         super(create_bottleneck, self).__init__()
         self.has_proj = has_proj

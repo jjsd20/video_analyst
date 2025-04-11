@@ -10,6 +10,7 @@ from .vot import VOTDataset, VOTLTDataset
 
 
 class DatasetFactory(object):
+
     @staticmethod
     def create_dataset(**kwargs):
         """

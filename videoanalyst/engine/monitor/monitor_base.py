@@ -54,6 +54,7 @@ class MonitorBase:
         r"""
         an interface for update params
         """
+
     def init(self, engine_state: Dict):
         r"""register engine state & initialize monitor
         """

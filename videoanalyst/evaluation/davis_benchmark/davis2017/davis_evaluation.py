@@ -19,6 +19,7 @@ from ..davis2017.results import Results
 
 
 class DAVISEvaluation(object):
+
     def __init__(self,
                  davis_root,
                  task,
@@ -93,9 +94,10 @@ class DAVISEvaluation(object):
         for ii in range(all_gt_masks.shape[0]):
             for jj in range(all_res_masks.shape[0]):
                 if 'J' in metric:
-                    j_metrics_res[jj, ii, :] = db_eval_iou(
-                        all_gt_masks[ii, ...], all_res_masks[jj, ...],
-                        all_void_masks)
+                    j_metrics_res[jj,
+                                  ii, :] = db_eval_iou(all_gt_masks[ii, ...],
+                                                       all_res_masks[jj, ...],
+                                                       all_void_masks)
                 if 'F' in metric:
                     f_metrics_res[jj, ii, :] = db_eval_boundary(
                         all_gt_masks[ii, ...], all_res_masks[jj, ...],

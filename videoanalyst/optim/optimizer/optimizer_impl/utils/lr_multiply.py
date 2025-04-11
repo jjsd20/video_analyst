@@ -37,6 +37,7 @@ def build(cfg: List[str]):
 
 
 class LRMultiplier():
+
     def __init__(self, names: List[str], compiled_regexes: List,
                  ratios: List[float]):
         """multiplier

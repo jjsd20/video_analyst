@@ -17,6 +17,7 @@ class DTB70(object):
         root_dir (string): Root directory of dataset where sequence
             folders exist.
     """
+
     def __init__(self, root_dir):
         super(DTB70, self).__init__()
         self.root_dir = root_dir

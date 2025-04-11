@@ -145,6 +145,7 @@ def _to_polygon(polys):
             (left, top, width, height); or an N x 8 numpy array, each line represent
             the coordinates (x1, y1, x2, y2, x3, y3, x4, y4) of 4 corners.
     """
+
     def to_polygon(x):
         assert len(x) in [4, 8]
         if len(x) == 4:

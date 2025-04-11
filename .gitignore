@@ -61,6 +61,7 @@ configs/lizuoxin
 
 log.txt
 .idea/
+.vscode
 *.protobuf
 
 /logs
@@ -70,8 +71,11 @@ log.txt
 vaenv
 venv
 /tmp
+/build
 *.onnx
 *.trt
 debug
 *.txt
 PKG-INFO
+.idea/
+*.egg-info

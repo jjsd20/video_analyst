@@ -6,7 +6,7 @@ python:
   - "3.6"
   - "3.7"
 
-env: UBUNTU_VERSION=ubuntu1804
+env: UBUNTU_VERSION=ubuntu2004
 
 cache: pip
 

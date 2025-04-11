@@ -196,6 +196,7 @@ var_dict = locals()
 
 
 class TestBboxTransform(unittest.TestCase):
+
     def test_clip_bbox(self):
         print('test for clip_bbox')
         for case in clip_bbox_test_cases:

@@ -80,6 +80,7 @@ class TesterBase:
         r"""
         an interface for update params
         """
+
     def test(self) -> Dict:
         r"""
         an interface to start testing
@@ -88,6 +89,7 @@ class TesterBase:
         Dict
             result object which need to contain the key "main_performance" in case of hyper-parameter optimization
         """
+
     def set_random_seed(self):
         seed = self._hyper_params["random_seed"]
         random.seed(seed)

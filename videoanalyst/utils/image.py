@@ -58,6 +58,7 @@ class ImageFileVideoStream:
     r"""Adaptor class to be compatible with VideoStream object
         Accept seperate video frames
     """
+
     def __init__(self, video_dir, init_counter=0):
         self._state = dict()
         self._state["video_dir"] = video_dir
@@ -83,6 +84,7 @@ class ImageFileVideoWriter:
     r"""Adaptor class to be compatible with VideoWriter object
         Accept seperate video frames
     """
+
     def __init__(self, video_dir):
         self._state = dict()
         self._state["video_dir"] = video_dir

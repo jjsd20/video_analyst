@@ -9,6 +9,7 @@ from ..utils.viz import show_frame
 
 
 class Tracker(object):
+
     def __init__(self, name, is_deterministic=False):
         self.name = name
         self.is_deterministic = is_deterministic

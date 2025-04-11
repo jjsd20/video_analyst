@@ -14,6 +14,7 @@ from .utils.plotting import show_tensor
 
 
 class BaseClassifier(object):
+
     def __init__(self, model, cfg):
         self.model = model
         self.cfg = cfg
@@ -337,8 +338,8 @@ class BaseClassifier(object):
             round(max_disp1[1].item() + target_neigh_sz[1].item() / 2 + 1),
             sz[1])
         scores_masked = scores.clone()
-        scores_masked[..., tneigh_top:tneigh_bottom, tneigh_left:
-                      tneigh_right] = 0
+        scores_masked[..., tneigh_top:tneigh_bottom,
+                      tneigh_left:tneigh_right] = 0
 
         # Find new maximum
         max_score2, max_disp2 = dcf.max2d(scores_masked)
@@ -643,8 +644,8 @@ class BaseClassifier(object):
                 sample_center = center_pos + torch.Tensor(
                     T.shift) / self.img_sample_sz * sz
                 #y[i, 0, ...] = dcf.label_function_spatial(sz, sig, sample_center, scale)
-                y[i, 0, ...] = dcf.label_function_spatial(
-                    sz, sig, sample_center)
+                y[i, 0,
+                  ...] = dcf.label_function_spatial(sz, sig, sample_center)
 
         # Return only the ones to use for initial training
         return TensorList(

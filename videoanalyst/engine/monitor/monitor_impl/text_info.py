@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*
 from typing import Dict
+
 import torch
+
 from ..monitor_base import TRACK_MONITORS, VOS_MONITORS, MonitorBase
 
 
