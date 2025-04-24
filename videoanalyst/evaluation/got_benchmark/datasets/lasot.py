@@ -246,7 +246,8 @@ class LaSOT(object):
         anno = np.loadtxt(os.path.join(seq_dir, "groundtruth.txt"),
                           delimiter=',')
 
-        assert len(img_files) == len(anno)
+        assert len(img_files) == len(
+            anno), f"Mismatch in {seq_dir}: {len(img_files)} vs {len(anno)}"
 
         if self.return_meta:
             meta = self._fetch_meta(seq_dir)

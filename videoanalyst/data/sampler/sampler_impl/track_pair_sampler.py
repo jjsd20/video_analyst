@@ -45,6 +45,7 @@ class TrackPairSampler(SamplerBase):
                  datasets: List[DatasetBase] = [],
                  seed: int = 0,
                  data_filter=None) -> None:
+
         super().__init__(datasets, seed=seed)
         if data_filter is None:
             self.data_filter = [lambda x: False]
