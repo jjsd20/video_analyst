@@ -1,6 +1,6 @@
 test:
   track:
-    exp_name: &TEST_NAME "siamfcpp_googlenet-test-2"
+    exp_name: &TEST_NAME "siamfcpp_googlenet-test4070-a5000train-e19-1"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -23,7 +23,7 @@ test:
         name: "SiamTrack"
         SiamTrack:
           #pretrain_model_path: "models/siamfcpp/siamfcpp-googlenet-lasot-md5sum_434540569e163188d2bf47438e075529.pkl"
-          pretrain_model_path: "snapshots/siamfcpp_googlenet-lasot-2/epoch-19.pkl"
+          pretrain_model_path: "snapshots/siamfcpp_googlenet-lasota5000-1/epoch-19.pkl"
 
     pipeline:
       name: "SiamFCppTracker"
