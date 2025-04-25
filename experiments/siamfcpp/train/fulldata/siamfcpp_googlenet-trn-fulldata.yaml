@@ -37,7 +37,7 @@ test:
         exp_save: *TEST_SAVE
         device_num: 1
         dataset_names: ["VOT2018"]
-      names: ["TrackingNetTester",]
+ #     names: ["TrackingNetTester",]
       TrackingNetTester:
         exp_name: *TEST_NAME
         exp_save: *TEST_SAVE
