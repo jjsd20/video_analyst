@@ -13,7 +13,7 @@ from videoanalyst.engine.builder import build as tester_builder
 from videoanalyst.model import builder as model_builder
 from videoanalyst.pipeline import builder as pipeline_builder
 
-#experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot.yaml
+#experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot-raw.yaml
 
 
 def make_parser():
