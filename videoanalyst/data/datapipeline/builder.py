@@ -27,9 +27,9 @@ def build(task: str, cfg: CfgNode, seed: int = 0) -> DatapipelineBase:
     assert task in TASK_DATAPIPELINES, "invalid task name"
     MODULES = TASK_DATAPIPELINES[task]
 
-    sampler = build_sampler(task, cfg.sampler, seed=seed)
-    transformers = build_transformer(task, cfg.transformer, seed=seed)
-    target = build_target(task, cfg.target)
+    sampler = build_sampler(task, cfg.sampler, seed=seed)  #构建采样器
+    transformers = build_transformer(task, cfg.transformer, seed=seed)  #构建数据增强器
+    target = build_target(task, cfg.target)  #构建目标
 
     pipeline = []
     pipeline.extend(transformers)

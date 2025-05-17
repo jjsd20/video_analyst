@@ -58,29 +58,29 @@ class SiamTrack(ModuleBase):
         self._phase = p
 
     def train_forward(self, training_data):
-        target_img = training_data["im_z"]
-        search_img = training_data["im_x"]
+        target_img = training_data["im_z"]  #32*3*127*127
+        search_img = training_data["im_x"]  #32*3*303*303
         # backbone feature
-        f_z = self.basemodel(target_img)
-        f_x = self.basemodel(search_img)
+        f_z = self.basemodel(target_img)  #32*256*6*6
+        f_x = self.basemodel(search_img)  #32*256*28*28
         # feature adjustment
-        c_z_k = self.c_z_k(f_z)
-        r_z_k = self.r_z_k(f_z)
-        c_x = self.c_x(f_x)
-        r_x = self.r_x(f_x)
+        c_z_k = self.c_z_k(f_z)  #32*256*4*4
+        r_z_k = self.r_z_k(f_z)  #32*256*4*4
+        c_x = self.c_x(f_x)  #32*256*26*26
+        r_x = self.r_x(f_x)  #32*256*26*26
         # feature matching
-        r_out = xcorr_depthwise(r_x, r_z_k)
-        c_out = xcorr_depthwise(c_x, c_z_k)
+        r_out = xcorr_depthwise(r_x, r_z_k)  #32*256*23*23
+        c_out = xcorr_depthwise(c_x, c_z_k)  #32*256*23*23
         # head
         fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
             c_out, r_out)
         predict_data = dict(
-            cls_pred=fcos_cls_score_final,
-            ctr_pred=fcos_ctr_score_final,
-            box_pred=fcos_bbox_final,
+            cls_pred=fcos_cls_score_final,  #32*289*1
+            ctr_pred=fcos_ctr_score_final,  #32*289*1
+            box_pred=fcos_bbox_final,  #32*289*4
         )
         if self._hyper_params["corr_fea_output"]:
-            predict_data["corr_fea"] = corr_fea
+            predict_data["corr_fea"] = corr_fea  #32*256*17*17
         return predict_data
 
     def instance(self, img):

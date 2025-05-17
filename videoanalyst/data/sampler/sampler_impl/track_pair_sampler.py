@@ -103,9 +103,10 @@ class TrackPairSampler(SamplerBase):
         return data1, data2
 
     def _sample_track_frame(self) -> Dict:
-        _, dataset = self._sample_dataset()
-        sequence_data = self._sample_sequence_from_dataset(dataset)
-        len_seq = self._get_len_seq(sequence_data)
+        _, dataset = self._sample_dataset()  # returndataset_idx, dataset 数据集
+        sequence_data = self._sample_sequence_from_dataset(
+            dataset)  #return sequence_data视频
+        len_seq = self._get_len_seq(sequence_data)  #return len_seq 帧数
         if len_seq == 1:
             # static image dataset
             data_frame = self._sample_track_frame_from_static_image(

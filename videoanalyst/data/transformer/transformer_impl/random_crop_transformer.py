@@ -46,6 +46,8 @@ class RandomCropTransformer(TransformerBase):
         sampled_data: Dict()
             input data
             Dict(data1=Dict(image, anno), data2=Dict(image, anno))
+        config: Dict
+            {'context_amount': 0.5, 'max_scale': 0.3, 'max_scale_temp': 0.0, 'max_shift': 0.4, 'max_shift_temp': 0.0, 'x_size': 303, 'z_size': 127}
         """
         data1 = sampled_data["data1"]
         data2 = sampled_data["data2"]
