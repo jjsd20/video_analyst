@@ -70,7 +70,8 @@ class SiamTrack(ModuleBase):
         r_x = self.r_x(f_x)  #32*256*26*26
         # feature matching
         r_out = xcorr_depthwise(r_x, r_z_k)  #32*256*23*23
-        c_out = xcorr_depthwise(c_x, c_z_k)  #32*256*23*23
+        c_out = xcorr_depthwise(c_x, c_z_k)
+        #32*256*23*23
         # head
         fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
             c_out, r_out)

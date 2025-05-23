@@ -27,6 +27,7 @@ torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
 #export PYTHONPATH="/home/xyz/Code/videoanalyst:$PYTHONPATH"
 #python3 ./main/train.py --config 'experiments/siamfcpp/train/lasot/siamfcpp_googlenet-trn.yaml'
+#experiments/siamfcpp/train/lasot/siamfcpp_googlenet_upd-trn.yaml
 
 
 def make_parser():

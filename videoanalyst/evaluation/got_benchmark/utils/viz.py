@@ -5,6 +5,7 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import cv2
 
 fig_dict = {}
 patch_dict = {}
@@ -82,3 +83,102 @@ def show_frame(image,
 
     plt.pause(pause)
     plt.draw()
+
+
+def show_frame_with_boxes(image,
+                          boxes=None,
+                          pause=0.001,
+                          linewidth=3,
+                          colors=None,
+                          legends=None):
+    r"""Visualize an image with optional rectangle(s) using OpenCV.
+
+    Args:
+        image (numpy.ndarray or PIL.Image): Image to show.
+        boxes (numpy.array or a list of numpy.ndarray, optional): A 4 dimensional array
+            specifying rectangle [left, top, width, height] to draw, or a list of arrays
+            representing multiple rectangles. Default is ``None``.
+        pause (float, optional): Time delay for the plot. Default is 0.001 second.
+        linewidth (int, optional): Thickness for drawing the rectangle. Default is 3 pixels.
+        colors (list, optional): List of colors for the rectangles. Default is None.
+        legends (list, optional): List of legends for the rectangles. Default is None.
+    """
+    if not isinstance(image, np.ndarray):
+        image = np.array(image)
+
+    # Convert image from BGR to RGB if needed
+    if image.shape[2] == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    if colors is None:
+        colors = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (0, 255, 255), (255, 0, 255), (255, 255, 0)] + \
+                 [(255, 255, 255)] * (len(boxes) - 6)  # Default colors if not provided
+    elif isinstance(colors, str):
+        colors = [colors]
+
+    if boxes is not None:
+        if not isinstance(boxes, (list, tuple)):
+            boxes = [boxes]
+
+        for i, box in enumerate(boxes):
+            color = colors[i % len(colors)]
+            # Convert color from BGR to RGB if needed
+            if isinstance(color, str):
+                color = tuple(
+                    int(color.lstrip('#')[i:i + 2], 16)
+                    for i in (0, 2, 4))[::-1]
+            elif isinstance(color, tuple):
+                color = color[::-1]  # Convert to BGR for OpenCV
+
+            # Draw the rectangle
+            box = [int(b) for b in box]
+            cv2.rectangle(image, (box[0], box[1]),
+                          (box[0] + box[2], box[1] + box[3]), color, linewidth)
+
+    # Display the image
+    cv2.imshow('Frame', image)
+    cv2.waitKey(int(pause * 1000))  # Convert pause from seconds to milliseconds
+
+
+'''
+ # Optionally add legends (not directly supported in OpenCV, so we draw text)
+    if legends is not None:
+        if not isinstance(legends, (list, tuple)):
+            legends = [legends]
+
+        for i, legend in enumerate(legends):
+            box = boxes[i]
+            color = colors[i % len(colors)]
+            # Convert color from BGR to RGB if needed
+            if isinstance(color, str):
+                color = tuple(int(color.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4))[::-1]
+            elif isinstance(color, tuple):
+                color = color[::-1]  # Convert to BGR for OpenCV
+
+            # Draw the legend text
+            text_position = (box[0], box[1] - 10)
+            cv2.putText(image, legend, text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+
+    # Display the image again to show the text
+    cv2.imshow('Frame', image)
+    cv2.waitKey(int(pause * 1000))  # Convert pause from seconds to milliseconds
+
+
+'''
+
+# Example usage
+if __name__ == "__main__":
+    # Create a sample image
+    image = np.zeros((400, 400, 3), dtype=np.uint8)
+
+    # Define some sample boxes
+    boxes = [[50, 50, 100, 100], [150, 150, 150, 150]]
+
+    # Define some sample colors
+    colors = ['green', 'red']
+
+    # Define some sample legends
+    legends = ['Box 1', 'Box 2']
+
+    # Show the image with boxes
+    show_frame(image, boxes, colors=colors, legends=legends)

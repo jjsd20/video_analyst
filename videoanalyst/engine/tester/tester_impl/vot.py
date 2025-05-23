@@ -216,7 +216,7 @@ class VOTTester(TesterBase):
         test_result_dict["main_performance"] = eao
         return test_result_dict
 
-    def track_single_video(self, tracker, video, v_id=0):
+    def track_single_video(self, tracker, video, v_id=0, vis=True):
         r"""
         track frames in single video with VOT rules
 
@@ -281,6 +281,30 @@ class VOTTester(TesterBase):
                 toc += cv2.getTickCount() - tic
             else:  # skip
                 regions.append(0)
+
+            if f == 0:
+                cv2.destroyAllWindows()
+            if vis and f > start_frame:
+                # if len(gt[f]) == 4:
+                # gt_bbox = [gt_bbox[0], gt_bbox[1],
+                #    gt_bbox[0], gt_bbox[1]+gt_bbox[3]-1,
+                #    gt_bbox[0]+gt_bbox[2]-1, gt_bbox[1]+gt_bbox[3]-1,
+                #    gt_bbox[0]+gt_bbox[2]-1, gt_bbox[1]]
+                cv2.polylines(im,
+                              [np.array(gt_polygon, int).reshape(
+                                  (-1, 1, 2))], True, (0, 255, 0), 3)
+                # bbox = list(map(int, pred_bbox))
+                # cv2.rectangle(img, (bbox[0], bbox[1]),
+                #               (bbox[0] + bbox[2], bbox[1] + bbox[3]), (0, 255, 255), 3)
+                cv2.polylines(im,
+                              [np.array(pred_polygon, int).reshape(
+                                  (-1, 1, 2))], True, (0, 255, 255), 3)
+                cv2.putText(im, str(f), (40, 40), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                            (0, 255, 255), 2)
+                cv2.putText(im, str(lost_times), (40, 80),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.imshow("vot", im)
+                cv2.waitKey(1)
 
         toc /= cv2.getTickFrequency()
 

@@ -6,7 +6,8 @@ from typing import List
 import cv2
 import numpy as np
 
-from videoanalyst.evaluation.got_benchmark.utils.viz import show_frame
+from videoanalyst.evaluation.got_benchmark.utils.viz import \
+    show_frame_with_boxes
 from videoanalyst.pipeline.pipeline_base import PipelineBase
 
 
@@ -94,8 +95,9 @@ class PipelineTracker(object):
             else:
                 boxes[f, :] = self.update(image)
             times[f] = time.time() - start_time
-
+            visualize = True
             if visualize:
-                show_frame(image, boxes[f, :])
+                #show_frame(image, boxes[f, :])
+                show_frame_with_boxes(image, boxes[f, :])
 
         return boxes, times

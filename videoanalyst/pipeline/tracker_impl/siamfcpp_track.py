@@ -12,6 +12,11 @@ from videoanalyst.pipeline.utils import (cxywh2xywh, get_crop,
                                          imarray_to_tensor, tensor_to_numpy,
                                          xywh2cxywh, xyxy2cxywh)
 
+if np.__version__ >= '1.24.0':
+    np.int = int  # 将 np.int 指向 Python 原生 int
+    np.float = float  # 同理处理其他弃用类型
+    np.bool = bool
+
 
 # ============================== Tracker definition ============================== #
 @TRACK_PIPELINES.register
