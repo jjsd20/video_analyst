@@ -135,12 +135,11 @@ class SiamUpdTrack(ModuleBase):
         r_z_k = self.r_z_k(f_z)  #32*256*4*4
         c_x = self.c_x(f_x)  #32*256*26*26
         r_x = self.r_x(f_x)  #32*256*26*26
+        # update template
+        c_z_k = self.fusion(c_z_k, c_x)
         # feature matching
         c_out = xcorr_depthwise(c_x, c_z_k)  #32*256*23*23
         r_out = xcorr_depthwise(r_x, r_z_k)  # 32*256*23*23
-
-        #update template
-        c_out = self.fusion(c_out, c_z_k)
 
         # head
         fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
