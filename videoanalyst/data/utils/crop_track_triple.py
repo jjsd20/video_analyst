@@ -81,8 +81,8 @@ def crop_track_triple(
             str(bbox_temp), str(bbox_curr), str(bbox_prev))
 
     scale_temp_ = z_size / st_
-    scale_curr_ = z_size / sc_
-    scale_prev_ = z_size / sc_prev_
+    scale_curr_ = x_size / sc_
+    scale_prev_ = x_size / sc_prev_
 
     # loop to generate valid augmentation
     for i in range(_MAX_RETRY + 1):
@@ -99,10 +99,10 @@ def crop_track_triple(
             if DEBUG: print('not augmented')
         scale_curr = scale_curr_ / scale_rand
         scale_temp = scale_temp_ / scale_rand_temp
-        scale_prev = scale_prev_ / scale_rand_temp
+        scale_prev = scale_prev_ / scale_rand
         s_curr = x_size / scale_curr
         s_temp = z_size / scale_temp
-        s_prev = z_size / scale_curr
+        s_prev = x_size / scale_curr
 
         # random shift
         if i < _MAX_RETRY:
@@ -122,10 +122,9 @@ def crop_track_triple(
         box_crop_curr = np.concatenate(
             [box_curr[:2] - np.array([dx, dy]),
              np.array([s_curr, s_curr])])
-        box_crop_prev = np.concatenate([
-            box_prev[:2] - np.array([dx_temp, dx_temp]),
-            np.array([s_prev, s_prev])
-        ])
+        box_crop_prev = np.concatenate(
+            [box_prev[:2] - np.array([dx, dx]),
+             np.array([s_prev, s_prev])])
 
         # calculate new bbox
         box_z = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
@@ -134,8 +133,7 @@ def crop_track_triple(
         box_x = np.array([(x_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
             [np.array([dx, dy]), np.array([wc, hc])]) * scale_curr
         box_prev = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
-            [np.array([dx_temp, dy_temp]),
-             np.array([wc, hc])]) * scale_prev
+            [np.array([dx, dy]), np.array([wc, hc])]) * scale_prev
 
         bbox_z = cxywh2xyxy(box_z)
         bbox_x = cxywh2xyxy(box_x)
@@ -144,7 +142,7 @@ def crop_track_triple(
         # check validity of bbox
         if not (all([0 <= c <= z_size - 1 for c in bbox_z])
                 and all([0 <= c <= x_size - 1 for c in bbox_x])
-                and all([0 <= c <= z_size - 1 for c in bbox_prev])):
+                and all([0 <= c <= x_size - 1 for c in bbox_prev])):
             continue
         else:
             break
@@ -152,6 +150,7 @@ def crop_track_triple(
     # crop & resize via warpAffine
     mask_z = None
     mask_x = None
+    mask_prev = None
     if mask_tmp is not None:
         im_z, mask_z = get_subwindow_tracking(im_temp,
                                               box_crop_temp[:2],
@@ -189,7 +188,7 @@ def crop_track_triple(
     else:
         im_prev = get_subwindow_tracking(im_prev,
                                          box_crop_prev[:2],
-                                         z_size,
+                                         x_size,
                                          s_prev,
                                          avg_chans=avg_chans,
                                          mask=mask_prev)
