@@ -1,7 +1,7 @@
 from typing import Dict
 
-from videoanalyst.data.utils.crop_track_pair import (crop_track_pair,
-                                                     crop_track_triple)
+from videoanalyst.data.utils.crop_track_pair import crop_track_pair
+from videoanalyst.data.utils.crop_track_triple import crop_track_triple
 
 from ..transformer_base import TRACK_TRANSFORMERS, TransformerBase
 
@@ -55,8 +55,8 @@ class RandomCropTransformer(TransformerBase):
         data3 = sampled_data.get("data3")
         im_temp, bbox_temp = data1["image"], data1["anno"]
         im_curr, bbox_curr = data2["image"], data2["anno"]
-        im_prev, bbox_prev = (data3["image"],
-                              data3["anno"]) if data3 else (None, None)
+        im_tprev, bbox_tprev = (data3["image"],
+                                data3["anno"]) if data3 else (None, None)
 
         if data3 is not None:
             im_z, bbox_z, im_x, bbox_x, im_prev, bbox_prev, _, _, _ = crop_track_triple(
@@ -64,12 +64,11 @@ class RandomCropTransformer(TransformerBase):
                 bbox_temp,
                 im_curr,
                 bbox_curr,
-                im_prev,
-                bbox_prev,
+                im_tprev,
+                bbox_tprev,
                 config=self._hyper_params,
                 rng=self._state["rng"])
         else:
-
             im_z, bbox_z, im_x, bbox_x, _, _ = crop_track_pair(
                 im_temp,
                 bbox_temp,
@@ -81,6 +80,6 @@ class RandomCropTransformer(TransformerBase):
         sampled_data["data1"] = dict(image=im_z, anno=bbox_z)
         sampled_data["data2"] = dict(image=im_x, anno=bbox_x)
         if data3 is not None:
-            sampled_data["data3"] = dict(image=im_prev_new, anno=bbox_prev_new)
+            sampled_data["data3"] = dict(image=im_prev, anno=bbox_prev)
 
         return sampled_data

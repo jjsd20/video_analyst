@@ -43,11 +43,17 @@ class DenseboxTarget(TargetBase):
         data_x = sampled_data["data2"]
         im_x, bbox_x = data_x["image"], data_x["anno"]
 
+        data_prev = sampled_data.get("data3")
+        if data_prev is not None:
+            im_prev, bbox_prev = data_prev["image"], data_prev["anno"]
+
         is_negative_pair = sampled_data["is_negative_pair"]
 
         # input tensor
         im_z = im_z.transpose(2, 0, 1)
         im_x = im_x.transpose(2, 0, 1)
+        if data_prev is not None:
+            im_prev = im_prev.transpose(2, 0, 1)
 
         # training target
         cls_label, ctr_label, box_label = make_densebox_target(
@@ -66,6 +72,19 @@ class DenseboxTarget(TargetBase):
             box_gt=box_label,
             is_negative_pair=int(is_negative_pair),
         )
+        if data_prev is not None:
+            training_data = dict(
+                im_z=im_z,
+                im_x=im_x,
+                im_prev=im_prev,
+                bbox_z=bbox_z,
+                bbox_x=bbox_x,
+                bbox_prev=bbox_prev,
+                cls_gt=cls_label,
+                ctr_gt=ctr_label,
+                box_gt=box_label,
+                is_negative_pair=int(is_negative_pair),
+            )
         #training_data = super().__call__(training_data)
 
         return training_data

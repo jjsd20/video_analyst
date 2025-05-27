@@ -14,6 +14,7 @@ from videoanalyst.model import builder as model_builder
 from videoanalyst.pipeline import builder as pipeline_builder
 
 #experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot.yaml
+#experiments/siamfcpp/test/lasot/siamfcpp_googlenet_upd-lasot.yaml
 #experiments/siamfcpp/test/vot/siamfcpp_googlenet.yaml
 
 

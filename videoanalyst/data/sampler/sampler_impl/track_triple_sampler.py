@@ -14,7 +14,7 @@ from ..sampler_base import TRACK_SAMPLERS, VOS_SAMPLERS, SamplerBase
 
 @TRACK_SAMPLERS.register
 @VOS_SAMPLERS.register
-class TrackPairSampler(SamplerBase):
+class TrackTripleSampler(SamplerBase):
     r"""
     Tracking data sampler
     Sample procedure:
@@ -73,17 +73,19 @@ class TrackPairSampler(SamplerBase):
         """
         is_negative_pair = (self._state["rng"].rand() <
                             self._hyper_params["negative_pair_ratio"])
-        data1 = data2 = None
+        data1 = data2 = data3 = None
         sample_try_num = 0
-        while self.data_filter(data1) or self.data_filter(data2):
+        while self.data_filter(data1) or self.data_filter(
+                data2) or self.data_filter(data3):
             if is_negative_pair:
                 data1 = self._sample_track_frame()
                 data2 = self._sample_track_frame()
                 data3 = data1
             else:
-                data1, data2 = self._sample_track_pair()
+                data1, data2, data3 = self._sample_track_pair()
             data1["image"] = load_image(data1["image"])
             data2["image"] = load_image(data2["image"])
+            data3["image"] = load_image(data3["image"])
             sample_try_num += 1
         sampled_data = dict(
             data1=data1,
@@ -218,7 +220,10 @@ class TrackPairSampler(SamplerBase):
         """
         rng = self._state["rng"]
         idx1 = rng.choice(L)
-        idx3 = idx1 + 1
+        if idx1 + 1 >= L:
+            idx3 = idx1 - 1
+        else:
+            idx3 = idx1 + 1
         idx2_choices = list(range(idx1 - max_diff, L)) + \
                        list(range(L + 1, idx1 + max_diff + 1))
         idx2_choices = list(set(idx2_choices).intersection(set(range(L))))

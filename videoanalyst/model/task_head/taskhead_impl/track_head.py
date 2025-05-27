@@ -107,12 +107,12 @@ class DenseboxHead(ModuleBase):
     def forward(self, c_out, r_out, x_size=0, raw_output=False):
         # classification head
         num_conv3x3 = self._hyper_params['num_conv3x3']
-        cls = c_out
-        bbox = r_out
+        cls = c_out  #b*256*23*23
+        bbox = r_out  #b*256*23*23
 
         for i in range(0, num_conv3x3):
-            cls = getattr(self, 'cls_p5_conv%d' % (i + 1))(cls)
-            bbox = getattr(self, 'bbox_p5_conv%d' % (i + 1))(bbox)
+            cls = getattr(self, 'cls_p5_conv%d' % (i + 1))(cls)  #b*256*19*19
+            bbox = getattr(self, 'bbox_p5_conv%d' % (i + 1))(bbox)  #b*256*19*19
 
         # classification score
         cls_score = self.cls_score_p5(cls)  #todo
@@ -121,9 +121,9 @@ class DenseboxHead(ModuleBase):
         # center-ness score
         ctr_score = self.ctr_score_p5(cls)  #todo
         ctr_score = ctr_score.permute(0, 2, 3, 1)
-        ctr_score = ctr_score.reshape(ctr_score.shape[0], -1, 1)
+        ctr_score = ctr_score.reshape(ctr_score.shape[0], -1, 1)  #b*361*1
         # regression
-        offsets = self.bbox_offsets_p5(bbox)
+        offsets = self.bbox_offsets_p5(bbox)  #b*4*19*19
         offsets = torch.exp(self.si * offsets + self.bi) * self.total_stride
         if raw_output:
             return [cls_score, ctr_score, offsets]

@@ -48,7 +48,7 @@ test:
         device_num: 1
 train:
   track:
-    exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot-5090d-1"
+    exp_name: &TRAIN_NAME "siamfcpp_googlenet-upd-lasot-5090d-2"
     exp_save: &TRAIN_SAVE "snapshots"
     num_processes: 1
     model:

@@ -20,7 +20,7 @@ test:
           num_conv3x3: 2
           head_conv_bn: [False, False]
       task_model:
-        name: "SiamTrack"
+        name: "SiamUpdTrack"
         SiamTrack:
           pretrain_model_path: "snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl"
     pipeline:
@@ -48,7 +48,7 @@ test:
         device_num: 1
 train:
   track:
-    exp_name: &TRAIN_NAME "siamfcpp_googlenet-upd-lasot-5090d-1"
+    exp_name: &TRAIN_NAME "siamfcpp_googlenet-upd-lasot-5090d-3"
     exp_save: &TRAIN_SAVE "snapshots"
     num_processes: 1
     model:
@@ -90,14 +90,14 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 100  # 256，raw-128
+      minibatch: &MINIBATCH 60  # 256，raw-128
       num_workers: 24
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
       pin_memory: false
       datapipeline:
         name: "RegularDatapipeline"
       sampler:
-        name: "TrackPairSampler"
+        name: "TrackTripleSampler"
         TrackPairSampler:
           negative_pair_ratio: 0.33
         submodules:
@@ -125,13 +125,13 @@ train:
         RandomCropTransformer:
           max_scale: 0.3
           max_shift: 0.4
-          x_size: 303
+          x_size: 289
       target:
         name: "DenseboxTarget"
         DenseboxTarget:
           total_stride: 8
           score_size: 17
-          x_size: 303
+          x_size: 289
           num_conv3x3: 2
     trainer:
       name: "RegularTrainer"

@@ -185,10 +185,6 @@ class SiamFCppUpdateTracker(PipelineBase):
         else:
             window = np.ones((score_size, score_size))
 
-        #save the template feature
-        self._state['z_f'] = features.cpu().data
-        self._state['z_0'] = features.cpu().data
-
         self._state['z_crop'] = im_z_crop
         self._state['avg_chans'] = avg_chans
         self._state['features'] = features
@@ -234,6 +230,8 @@ class SiamFCppUpdateTracker(PipelineBase):
                 phase=phase_track)
         if self._hyper_params["corr_fea_output"]:
             self._state["corr_fea"] = extra["corr_fea"]
+
+        self._state['features'] = extra['features']
 
         box = tensor_to_numpy(box[0])
         score = tensor_to_numpy(score[0])[:, 0]

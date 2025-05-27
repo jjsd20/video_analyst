@@ -126,17 +126,21 @@ class SiamUpdTrack(ModuleBase):
 
     def train_forward(self, training_data):
         target_img = training_data["im_z"]  #32*3*127*127
-        search_img = training_data["im_x"]  #32*3*303*303
+        search_img = training_data["im_x"]  #32*3*289*289
+        fusion_img = training_data["im_prev"]  #32*3*289*289
         # backbone feature
-        f_z = self.basemodel(target_img)  #32*256*6*6
-        f_x = self.basemodel(search_img)  #32*256*28*28
+        f_z = self.basemodel(target_img)  #32*256*5*5
+        f_x = self.basemodel(search_img)  #32*256*25*25
+        f_prev = self.basemodel(fusion_img)  #32*256*25*25
         # feature adjustment
-        c_z_k = self.c_z_k(f_z)  #32*256*4*4
-        r_z_k = self.r_z_k(f_z)  #32*256*4*4
-        c_x = self.c_x(f_x)  #32*256*26*26
-        r_x = self.r_x(f_x)  #32*256*26*26
+        c_z_k = self.c_z_k(f_z)  #32*256*3*3
+        r_z_k = self.r_z_k(f_z)  #32*256*3*3
+
+        c_x = self.c_x(f_x)  #32*256*23*23
+        r_x = self.r_x(f_x)  #32*256*23*23
+        c_prev_k = self.c_x(f_prev)  # 32*256*23*23
         # update template
-        c_z_k = self.fusion(c_z_k, c_x)
+        c_z_k = self.fusion(c_z_k, c_prev_k)
         # feature matching
         c_out = xcorr_depthwise(c_x, c_z_k)  #32*256*23*23
         r_out = xcorr_depthwise(r_x, r_z_k)  # 32*256*23*23
@@ -242,12 +246,11 @@ class SiamUpdTrack(ModuleBase):
             else:
                 raise ValueError("Illegal args length: %d" % len(args))
 
+            # feature adjustment
+            c_z_k = self.fusion(c_z_k, c_x)
             # feature matching
             r_out = xcorr_depthwise(r_x, r_z_k)
             c_out = xcorr_depthwise(c_x, c_z_k)
-
-            # update template
-            c_z_k = self.fusion(c_z_k, c_out)
 
             # head
             fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
@@ -258,7 +261,8 @@ class SiamUpdTrack(ModuleBase):
             # apply centerness correction
             fcos_score_final = fcos_cls_prob_final * fcos_ctr_prob_final
             # register extra output
-            extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea)
+            features = [c_z_k, r_z_k]
+            extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea, features=features)
             self.cf = c_x
             # output
             out_list = fcos_score_final, fcos_bbox_final, fcos_cls_prob_final, fcos_ctr_prob_final, extra
