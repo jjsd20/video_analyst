@@ -3,80 +3,16 @@
 from loguru import logger
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 from videoanalyst.model.common_opr.common_block import (conv_bn_relu,
                                                         xcorr_depthwise)
 from videoanalyst.model.module_base import ModuleBase
 from videoanalyst.model.task_model.taskmodel_base import (TRACK_TASKMODELS,
                                                           VOS_TASKMODELS)
+from videoanalyst.model.task_model.taskmodel_impl.updatenet import \
+    FeatureFusionWithAttention
 
 torch.set_printoptions(precision=8)
-
-
-class FeatureFusionModule(nn.Module):
-
-    def __init__(self, channels, use_relu=True):
-        super().__init__()
-        # 通道对齐卷积（保持通道数不变）
-        self.align_conv = nn.Conv2d(channels, channels, kernel_size=1)
-
-        # 激活函数开关（与Metal版本ReLU对应）
-        self.relu = nn.ReLU(inplace=True) if use_relu else None
-
-    def forward(self, a, b):
-        """
-        参数:
-        a: 基准特征 [B, C, H, W]
-        b: 待融合特征 [B, C, H', W'] (H' < H, W' < W)
-
-        返回:
-        fused: 融合后特征 [B, C, H, W]
-        """
-        # 特征对齐（1x1卷积）
-        aligned_a = self.align_conv(a)
-
-        # 双线性插值上采样b到a的尺寸
-        resized_b = F.interpolate(b,
-                                  size=a.shape[-2:],
-                                  mode='bilinear',
-                                  align_corners=True)
-
-        # 特征融合（逐元素相加）
-        fused = aligned_a + resized_b
-
-        # 可选激活函数
-        if self.relu is not None:
-            fused = self.relu(fused)
-
-        return fused
-
-
-# 添加通道注意力机制
-class FeatureFusionWithAttention(FeatureFusionModule):
-
-    def __init__(self, channels):
-        super().__init__(channels)
-        # 通道注意力模块
-        self.attention = nn.Sequential(nn.AdaptiveAvgPool2d(1),
-                                       nn.Conv2d(channels, channels // 16, 1),
-                                       nn.ReLU(),
-                                       nn.Conv2d(channels // 16, channels, 1),
-                                       nn.Sigmoid())
-
-    def forward(self, a, b):
-        aligned_a = self.align_conv(a)
-        resized_b = F.interpolate(b,
-                                  a.shape[-2:],
-                                  mode='bilinear',
-                                  align_corners=True)
-
-        # 生成注意力权重
-        att = self.attention(aligned_a + resized_b)
-
-        # 加权融合
-        return att * aligned_a + (1 - att) * resized_b
 
 
 @TRACK_TASKMODELS.register
@@ -248,6 +184,10 @@ class SiamUpdTrack(ModuleBase):
 
             # feature adjustment
             c_z_k = self.fusion(c_z_k, c_x)
+            r'''
+            c_f=self.fusion(c_z_k,c_x,c_f)
+            '''
+
             # feature matching
             r_out = xcorr_depthwise(r_x, r_z_k)
             c_out = xcorr_depthwise(c_x, c_z_k)
