@@ -106,7 +106,7 @@ def crop_track_triple(
 
         s_curr = x_size / scale_curr
         s_temp = z_size / scale_temp
-        s_prev = x_size / scale_curr
+        s_prev = x_size / scale_prev
         #s_prev = z_size / scale_temp
 
         # random shift
@@ -115,8 +115,12 @@ def crop_track_triple(
             dy = rng.uniform(-max_shift, max_shift) * s_curr / 2
             dx_temp = rng.uniform(-max_shift_temp, max_shift_temp) * s_temp / 2
             dy_temp = rng.uniform(-max_shift_temp, max_shift_temp) * s_temp / 2
+            # dx_prev = rng.uniform(-max_shift_temp, max_shift_temp) * s_prev / 2
+            # dy_prev = rng.uniform(-max_shift_temp, max_shift_temp) * s_prev / 2
+            dx_prev = rng.uniform(-max_shift, max_shift) * s_prev / 2
+            dy_prev = rng.uniform(-max_shift, max_shift) * s_prev / 2
         else:
-            dx = dy = dx_temp = dy_temp = 0
+            dx = dy = dx_temp = dy_temp = dx_prev = dy_prev = 0
             if DEBUG: print('not augmented')
 
         # calculate bbox for cropping
@@ -127,9 +131,10 @@ def crop_track_triple(
         box_crop_curr = np.concatenate(
             [box_curr[:2] - np.array([dx, dy]),
              np.array([s_curr, s_curr])])
-        box_crop_prev = np.concatenate(
-            [box_prev[:2] - np.array([dx, dx]),
-             np.array([s_prev, s_prev])])
+        box_crop_prev = np.concatenate([
+            box_prev[:2] - np.array([dx_prev, dy_prev]),
+            np.array([s_prev, s_prev])
+        ])
 
         # box_crop_prev = np.concatenate(
         #     [box_prev[:2] - np.array([dx_temp, dy_temp]),
@@ -142,7 +147,8 @@ def crop_track_triple(
         box_x = np.array([(x_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
             [np.array([dx, dy]), np.array([wc, hc])]) * scale_curr
         box_prev = np.array([(x_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
-            [np.array([dx, dy]), np.array([wc, hc])]) * scale_prev
+            [np.array([dx_prev, dy_prev]),
+             np.array([wc_prev, hc_prev])]) * scale_prev
         # box_prev = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
         #     [np.array([dx_temp, dy_temp]),
         #      np.array([wt, ht])]) * scale_temp
@@ -193,7 +199,7 @@ def crop_track_triple(
     if mask_prev is not None:
         im_prev, mask_prev = get_subwindow_tracking(im_prev,
                                                     box_crop_prev[:2],
-                                                    z_size,
+                                                    x_size,
                                                     s_prev,
                                                     avg_chans=avg_chans,
                                                     mask=mask_prev)
