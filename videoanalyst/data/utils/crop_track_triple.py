@@ -82,7 +82,9 @@ def crop_track_triple(
 
     scale_temp_ = z_size / st_
     scale_curr_ = x_size / sc_
+
     scale_prev_ = x_size / sc_prev_
+    #scale_prev_ = z_size / sc_prev_
 
     # loop to generate valid augmentation
     for i in range(_MAX_RETRY + 1):
@@ -100,9 +102,12 @@ def crop_track_triple(
         scale_curr = scale_curr_ / scale_rand
         scale_temp = scale_temp_ / scale_rand_temp
         scale_prev = scale_prev_ / scale_rand
+        #scale_prev = scale_prev_ / scale_rand_temp
+
         s_curr = x_size / scale_curr
         s_temp = z_size / scale_temp
         s_prev = x_size / scale_curr
+        #s_prev = z_size / scale_temp
 
         # random shift
         if i < _MAX_RETRY:
@@ -126,14 +131,21 @@ def crop_track_triple(
             [box_prev[:2] - np.array([dx, dx]),
              np.array([s_prev, s_prev])])
 
+        # box_crop_prev = np.concatenate(
+        #     [box_prev[:2] - np.array([dx_temp, dy_temp]),
+        #      np.array([s_prev, s_prev])])
+
         # calculate new bbox
         box_z = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
             [np.array([dx_temp, dy_temp]),
              np.array([wt, ht])]) * scale_temp
         box_x = np.array([(x_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
             [np.array([dx, dy]), np.array([wc, hc])]) * scale_curr
-        box_prev = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
+        box_prev = np.array([(x_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
             [np.array([dx, dy]), np.array([wc, hc])]) * scale_prev
+        # box_prev = np.array([(z_size - 1) / 2] * 2 + [0] * 2) + np.concatenate(
+        #     [np.array([dx_temp, dy_temp]),
+        #      np.array([wt, ht])]) * scale_temp
 
         bbox_z = cxywh2xyxy(box_z)
         bbox_x = cxywh2xyxy(box_x)

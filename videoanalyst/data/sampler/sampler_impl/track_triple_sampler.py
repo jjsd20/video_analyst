@@ -82,7 +82,7 @@ class TrackTripleSampler(SamplerBase):
                 data2 = self._sample_track_frame()
                 data3 = data1
             else:
-                data1, data2, data3 = self._sample_track_pair()
+                data1, data2, data3 = self._sample_track_triple()
             data1["image"] = load_image(data1["image"])
             data2["image"] = load_image(data2["image"])
             data3["image"] = load_image(data3["image"])
@@ -99,7 +99,7 @@ class TrackTripleSampler(SamplerBase):
     def _get_len_seq(self, seq_data) -> int:
         return len(seq_data["image"])
 
-    def _sample_track_pair(self) -> Tuple[Dict, Dict]:
+    def _sample_track_triple(self) -> Tuple[Dict, Dict]:
         dataset_idx, dataset = self._sample_dataset()
         sequence_data = self._sample_sequence_from_dataset(dataset)
         len_seq = self._get_len_seq(sequence_data)
