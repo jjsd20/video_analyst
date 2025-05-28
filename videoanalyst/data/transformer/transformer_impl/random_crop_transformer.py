@@ -1,6 +1,7 @@
 from typing import Dict
 
 from videoanalyst.data.utils.crop_track_pair import crop_track_pair
+from videoanalyst.data.utils.crop_track_triple import crop_track_triple
 
 from ..transformer_base import TRACK_TRANSFORMERS, TransformerBase
 
@@ -46,20 +47,39 @@ class RandomCropTransformer(TransformerBase):
         sampled_data: Dict()
             input data
             Dict(data1=Dict(image, anno), data2=Dict(image, anno))
+        config: Dict
+            {'context_amount': 0.5, 'max_scale': 0.3, 'max_scale_temp': 0.0, 'max_shift': 0.4, 'max_shift_temp': 0.0, 'x_size': 303, 'z_size': 127}
         """
         data1 = sampled_data["data1"]
         data2 = sampled_data["data2"]
+        data3 = sampled_data.get("data3")
         im_temp, bbox_temp = data1["image"], data1["anno"]
         im_curr, bbox_curr = data2["image"], data2["anno"]
-        im_z, bbox_z, im_x, bbox_x, _, _ = crop_track_pair(
-            im_temp,
-            bbox_temp,
-            im_curr,
-            bbox_curr,
-            config=self._hyper_params,
-            rng=self._state["rng"])
+        im_tprev, bbox_tprev = (data3["image"],
+                                data3["anno"]) if data3 else (None, None)
+
+        if data3 is not None:
+            im_z, bbox_z, im_x, bbox_x, im_prev, bbox_prev, _, _, _ = crop_track_triple(
+                im_temp,
+                bbox_temp,
+                im_curr,
+                bbox_curr,
+                im_tprev,
+                bbox_tprev,
+                config=self._hyper_params,
+                rng=self._state["rng"])
+        else:
+            im_z, bbox_z, im_x, bbox_x, _, _ = crop_track_pair(
+                im_temp,
+                bbox_temp,
+                im_curr,
+                bbox_curr,
+                config=self._hyper_params,
+                rng=self._state["rng"])
 
         sampled_data["data1"] = dict(image=im_z, anno=bbox_z)
         sampled_data["data2"] = dict(image=im_x, anno=bbox_x)
+        if data3 is not None:
+            sampled_data["data3"] = dict(image=im_prev, anno=bbox_prev)
 
         return sampled_data

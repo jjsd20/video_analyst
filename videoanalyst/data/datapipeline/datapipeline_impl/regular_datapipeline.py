@@ -31,6 +31,16 @@ class RegularDatapipeline(DatapipelineBase):
     def __getitem__(self, item) -> Dict:
         r"""
         An interface to load batch data
+        '''
+        sampler[item] -> sampled_data
+
+        pipeline:
+            RandomCropTransformer(sampled_data)
+            DenseBoxTarget(sampled_data)
+
+        ToTensor(sampled_data)
+        return sampled_data
+        '''
         """
         sampled_data = self.sampler[item]
 

@@ -45,6 +45,12 @@ def crop_track_pair(
     max_shift = config["max_shift"]
     max_scale_temp = config["max_scale_temp"]
     max_shift_temp = config["max_shift_temp"]
+    '''
+    cv2.imshow('im_temp', im_temp)
+    cv2.waitKey(0)
+    cv2.imshow('im_curr', im_curr)
+    cv2.waitKey(0)
+    '''
 
     if avg_chans is None:
         avg_chans = np.mean(im_temp, axis=(0, 1))
@@ -152,7 +158,12 @@ def crop_track_pair(
                                       x_size,
                                       s_curr,
                                       avg_chans=avg_chans)
-
+    '''
+    cv2.imshow('im_x', im_x)
+    cv2.waitKey(0)
+    cv2.imshow('im_z', im_z)
+    cv2.waitKey(0)
+    '''
     return im_z, bbox_z, im_x, bbox_x, mask_z, mask_x
 
 

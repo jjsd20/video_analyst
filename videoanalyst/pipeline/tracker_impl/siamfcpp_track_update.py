@@ -12,15 +12,10 @@ from videoanalyst.pipeline.utils import (cxywh2xywh, get_crop,
                                          imarray_to_tensor, tensor_to_numpy,
                                          xywh2cxywh, xyxy2cxywh)
 
-if np.__version__ >= '1.24.0':
-    np.int = int  # 将 np.int 指向 Python 原生 int
-    np.float = float  # 同理处理其他弃用类型
-    np.bool = bool
-
 
 # ============================== Tracker definition ============================== #
 @TRACK_PIPELINES.register
-class SiamFCppTracker(PipelineBase):
+class SiamFCppUpdateTracker(PipelineBase):
     r"""
     Basic SiamFC++ tracker
 
@@ -82,13 +77,17 @@ class SiamFCppTracker(PipelineBase):
     )
 
     def __init__(self, *args, **kwargs):
-        super(SiamFCppTracker, self).__init__(*args, **kwargs)
+        super(SiamFCppUpdateTracker, self).__init__(*args, **kwargs)
         self.update_params()
 
         # set underlying model to device
         self.device = torch.device("cpu")
         self.debug = False
         self.set_model(self._model)
+        #the prameaters for the update function
+        self.temp = []
+        self.z_f = 0  #accumulate the template feature
+        self.z_c = 0  #current template feature
 
     def set_model(self, model):
         """model to be set to pipeline. change device & turn it into eval mode
@@ -231,6 +230,8 @@ class SiamFCppTracker(PipelineBase):
                 phase=phase_track)
         if self._hyper_params["corr_fea_output"]:
             self._state["corr_fea"] = extra["corr_fea"]
+
+        self._state['features'] = extra['features']
 
         box = tensor_to_numpy(box[0])
         score = tensor_to_numpy(score[0])[:, 0]
@@ -430,3 +431,10 @@ class SiamFCppTracker(PipelineBase):
         box_in_frame = np.stack([x, y, w, h], axis=-1)
 
         return box_in_frame
+
+    # ======== update ======== #
+    def updatenet(self, im, state=None):
+        """ Perform tracking on current frame"""
+
+        # use prediction on the last frame as target state prior
+        return self.update(im, state)

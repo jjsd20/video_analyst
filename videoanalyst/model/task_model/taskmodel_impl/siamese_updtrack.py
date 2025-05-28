@@ -9,13 +9,15 @@ from videoanalyst.model.common_opr.common_block import (conv_bn_relu,
 from videoanalyst.model.module_base import ModuleBase
 from videoanalyst.model.task_model.taskmodel_base import (TRACK_TASKMODELS,
                                                           VOS_TASKMODELS)
+from videoanalyst.model.task_model.taskmodel_impl.updatenet import \
+    FeatureFusionWithAttention
 
 torch.set_printoptions(precision=8)
 
 
 @TRACK_TASKMODELS.register
 @VOS_TASKMODELS.register
-class SiamTrack(ModuleBase):
+class SiamUpdTrack(ModuleBase):
     r"""
     SiamTrack model for tracking
 
@@ -40,13 +42,14 @@ class SiamTrack(ModuleBase):
     support_phases = ["train", "feature", "track", "freeze_track_fea"]
 
     def __init__(self, backbone, head, loss=None):
-        super(SiamTrack, self).__init__()
+        super(SiamUpdTrack, self).__init__()
         self.basemodel = backbone
         self.head = head
         self.loss = loss
         self.trt_fea_model = None
         self.trt_track_model = None
         self._phase = "train"
+        self.fusion = FeatureFusionWithAttention(256)
 
     @property
     def phase(self):
@@ -59,19 +62,25 @@ class SiamTrack(ModuleBase):
 
     def train_forward(self, training_data):
         target_img = training_data["im_z"]  #32*3*127*127
-        search_img = training_data["im_x"]  #32*3*303*303
+        search_img = training_data["im_x"]  #32*3*289*289
+        fusion_img = training_data["im_prev"]  #32*3*289*289
         # backbone feature
-        f_z = self.basemodel(target_img)  #32*256*6*6
-        f_x = self.basemodel(search_img)  #32*256*28*28
+        f_z = self.basemodel(target_img)  #32*256*5*5
+        f_x = self.basemodel(search_img)  #32*256*25*25
+        f_prev = self.basemodel(fusion_img)  #32*256*25*25
         # feature adjustment
-        c_z_k = self.c_z_k(f_z)  #32*256*4*4
-        r_z_k = self.r_z_k(f_z)  #32*256*4*4
-        c_x = self.c_x(f_x)  #32*256*26*26
-        r_x = self.r_x(f_x)  #32*256*26*26
+        c_z_k = self.c_z_k(f_z)  #32*256*3*3
+        r_z_k = self.r_z_k(f_z)  #32*256*3*3
+
+        c_x = self.c_x(f_x)  #32*256*23*23
+        r_x = self.r_x(f_x)  #32*256*23*23
+        c_prev_k = self.c_x(f_prev)  # 32*256*23*23
+        # update template
+        c_z_k = self.fusion(c_z_k, c_prev_k)
         # feature matching
-        r_out = xcorr_depthwise(r_x, r_z_k)  #32*256*23*23
-        c_out = xcorr_depthwise(c_x, c_z_k)
-        #32*256*23*23
+        c_out = xcorr_depthwise(c_x, c_z_k)  #32*256*23*23
+        r_out = xcorr_depthwise(r_x, r_z_k)  # 32*256*23*23
+
         # head
         fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
             c_out, r_out)
@@ -173,9 +182,16 @@ class SiamTrack(ModuleBase):
             else:
                 raise ValueError("Illegal args length: %d" % len(args))
 
+            # feature adjustment
+            c_z_k = self.fusion(c_z_k, c_x)
+            r'''
+            c_f=self.fusion(c_z_k,c_x,c_f)
+            '''
+
             # feature matching
             r_out = xcorr_depthwise(r_x, r_z_k)
             c_out = xcorr_depthwise(c_x, c_z_k)
+
             # head
             fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
                 c_out, r_out, search_img.size(-1))
@@ -185,7 +201,8 @@ class SiamTrack(ModuleBase):
             # apply centerness correction
             fcos_score_final = fcos_cls_prob_final * fcos_ctr_prob_final
             # register extra output
-            extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea)
+            features = [c_z_k, r_z_k]
+            extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea, features=features)
             self.cf = c_x
             # output
             out_list = fcos_score_final, fcos_bbox_final, fcos_cls_prob_final, fcos_ctr_prob_final, extra

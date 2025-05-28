@@ -1,6 +1,6 @@
 test:
   track:
-    exp_name: &TEST_NAME "siamfcpp_googlenet-test4070-a5000train-e19-1"
+    exp_name: &TEST_NAME "siamfcpp_googlenet_udp-lasot-5090d-3"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -20,14 +20,14 @@ test:
           num_conv3x3: &NUM_CONV3x3 2
           head_conv_bn: [False, False]
       task_model:
-        name: "SiamTrack"
+        name: "SiamUpdTrack"
         SiamTrack:
           #pretrain_model_path: "models/siamfcpp/siamfcpp-googlenet-lasot-md5sum_434540569e163188d2bf47438e075529.pkl"
-          pretrain_model_path: "snapshots/siamfcpp_googlenet-lasot-5090d-1/final_model.pkl"
+          pretrain_model_path: "snapshots/siamfcpp_googlenet-upd-lasot-5090d-3/final_model.pkl"
 
     pipeline:
-      name: "SiamFCppTracker"
-      SiamFCppTracker:
+      name: "SiamFCppUpdateTracker"
+      SiamFCppUpdateTracker:
         test_lr: 0.52
         window_influence: 0.21
         penalty_k: 0.04
